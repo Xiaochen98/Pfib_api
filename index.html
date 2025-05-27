@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pfib_api_test</title>
+</head>
+<body>
+  <h2>Pfib_api_test</h2>
+  <label>X: <input type="number" id="x" value="350"></label><br>
+  <label>Y: <input type="number" id="y" value="0.6"></label><br>
+  <label>Sheet:
+    <select id="sheet">
+      <option value="5S_D_SFW">5S_D_SFW</option>
+      <option value="50S_D_SFW">50S_D_SFW</option>
+      <option value="100S_D_SFW">100S_D_SFW</option>
+      <option value="200S_D_SFW">200S_D_SFW</option>
+      <option value="500S_D_SFW">500S_D_SFW</option>
+      <option value="1000S_D_SFW">1000S_D_SFW</option>
+      <option value="2000S_D_SFW">2000S_D_SFW</option>
+    </select>
+  </label><br>
+  <button onclick="interpolate()">Submit</button>
+  <pre id="result"></pre>
+
+  <script>
+    async function interpolate() {
+      const x = parseFloat(document.getElementById("x").value);
+      const y = parseFloat(document.getElementById("y").value);
+      const sheet = document.getElementById("sheet").value;
+
+      const res = await fetch("http://127.0.0.1:8000/interpolate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ x, y, sheet })
+      });
+
+      const data = await res.json();
+      document.getElementById("result").textContent = res.ok ? 
+        `Interpolated Value: ${data.value}` : `Error: ${data.detail}`;
+    }
+  </script>
+</body>
+</html>
